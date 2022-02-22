@@ -3,8 +3,12 @@
 import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
 import * as React from 'react';
-import {Text, View, Button} from 'react-native';
+import {View, Button} from 'react-native';
 import 'react-native-gesture-handler';
+import Form from './components/test';
+import Collections from './components/collections';
+import Detail from './components/detail';
+
 function Home({navigation}) {
   return (
     <View
@@ -13,7 +17,6 @@ function Home({navigation}) {
         justifyContent: 'center',
         alignItems: 'center',
       }}>
-      <Text>Home!</Text>
       <Button
         title="goBlogList"
         onPress={() => navigation.navigate('BlogList')}
@@ -22,35 +25,14 @@ function Home({navigation}) {
   );
 }
 
-function BlogList({navigation}) {
-  return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}>
-      <Text>Blog List!</Text>
-      <Button
-        title="goBlogDetail"
-        onPress={() => navigation.navigate('BlogDetail')}
-      />
-      <Button title="goBack" onPress={() => navigation.goBack()} />
-    </View>
-  );
+function BlogList({route, navigation}) {
+  return <Collections nav={navigation} />;
 }
-function BlogDetail({navigation}) {
-  return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}>
-      <Text>Blog Detail!</Text>
-      <Button title="goBack" onPress={() => navigation.goBack()} />
-    </View>
-  );
+function BlogDetail(props) {
+  return <Detail {...props} />;
+}
+function Test({navigation}) {
+  return <Form input="test" />;
 }
 
 const Stack = createStackNavigator();
@@ -61,6 +43,7 @@ function MyStack() {
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="BlogList" component={BlogList} />
       <Stack.Screen name="BlogDetail" component={BlogDetail} />
+      <Stack.Screen name="test" component={Test} />
     </Stack.Navigator>
   );
 }
