@@ -4,22 +4,31 @@ import Collection from './collection';
 function Collections(props) {
   const [isLoading, setIsLoading] = React.useState(true);
   const [data, setData] = React.useState([]);
-
-  const getData = async () => {
-    try {
-      const response = await fetch('https://fakestoreapi.com/products');
-      const json = await response.json();
-      setData(json);
-      setIsLoading(false);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const [isLoadMore, setIsLoadMore] = React.useState(false);
   React.useEffect(() => {
-    getData();
+    setIsLoading(true);
+    fetch(`https://fakestoreapi.com/products?limit=${20}`)
+      .then(response => response.json())
+      .then(json => {
+        setData(json);
+        setIsLoading(false);
+      })
+      .catch(error => console.error(error))
+      .finally(() => setIsLoadMore(false));
   }, []);
+  React.useEffect(() => {
+    if (isLoadMore === true) {
+      // setIsLoading(true);
+      fetch(`https://fakestoreapi.com/products?limit=${20}`)
+        .then(response => response.json())
+        .then(json => {
+          setData([...data, ...json]);
+          // setIsLoading(false);
+        })
+        .catch(error => console.error(error))
+        .finally(() => setIsLoadMore(false));
+    }
+  }, [isLoadMore]); // eslint-disable-line
 
   const styles = StyleSheet.create({
     container: {
@@ -42,7 +51,7 @@ function Collections(props) {
             nestedScrollEnabled={true}
             data={data}
             horizontal
-            keyExtractor={({id}, index) => id}
+            keyExtractor={(item, index) => `${index}-${item.id}`}
             renderItem={({item}) => (
               <Collection
                 img={item.image}
@@ -63,7 +72,7 @@ function Collections(props) {
           <FlatList
             nestedScrollEnabled={true}
             data={data}
-            keyExtractor={({id}, index) => id}
+            keyExtractor={(item, index) => `${index}-${item.id}`}
             renderItem={({item}) => (
               <Collection
                 img={item.image}
@@ -71,9 +80,23 @@ function Collections(props) {
                 price={item.price}
                 nav={props.nav}
                 item={item}
+                index={`${item.id}-${1}`}
                 ishorizontal={false}
               />
             )}
+            onEndReachedThreshold={0.1}
+            ListFooterComponent={() => {
+              if (data.length < 100) {
+                return <ActivityIndicator />;
+              } else {
+                return null;
+              }
+            }}
+            onEndReached={() => {
+              if (data.length < 100) {
+                setIsLoadMore(true);
+              }
+            }}
           />
         )}
       </View>

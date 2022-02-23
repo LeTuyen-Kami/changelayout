@@ -19,7 +19,7 @@ export default class Collection extends React.Component {
         <TouchableHighlight
           style={styles.button}
           onPress={() =>
-            this.state.navigation.navigate('BlogDetail', {
+            this.state.navigation.navigate('ProductDetail', {
               data: this.state.item,
             })
           }>
@@ -32,7 +32,9 @@ export default class Collection extends React.Component {
                 <Text style={styles.textTitle}>{this.state.title}</Text>
               </View>
               <View style={styles.price}>
-                <Text style={styles.textPrice}>Price: {this.state.price}</Text>
+                <Text style={styles.textPrice}>
+                  Price: {this.state.price + ' ' + this.props.index}
+                </Text>
               </View>
             </View>
           </View>
@@ -43,7 +45,7 @@ export default class Collection extends React.Component {
         <TouchableHighlight
           style={styles.button}
           onPress={() =>
-            this.state.navigation.navigate('BlogDetail', {
+            this.state.navigation.navigate('ProductDetail', {
               data: this.state.item,
             })
           }>

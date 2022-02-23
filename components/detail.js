@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
 const ShowRating = rate => {
   let result = [];
   for (let i = 0; i < Math.floor(rate); i++) {
-    result.push(<Icon name="star" size={25} color="yellow" />);
+    result.push(<Icon key={i} name="star" size={25} color="yellow" />);
   }
   return result;
 };
