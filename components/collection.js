@@ -1,7 +1,9 @@
 import React from 'react';
-import {View, Text, Image, TouchableHighlight} from 'react-native';
+import {View, Text, Image, TouchableHighlight, Alert} from 'react-native';
 import styles from './styles';
-export default class Collection extends React.Component {
+import {connect} from 'react-redux';
+
+class Collection extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -18,11 +20,28 @@ export default class Collection extends React.Component {
       return (
         <TouchableHighlight
           style={styles.button}
-          onPress={() =>
-            this.state.navigation.navigate('ProductDetail', {
-              data: this.state.item,
-            })
-          }>
+          onPress={() => {
+            this.props.isLogged.isLogin
+              ? this.state.navigation.navigate('ProductDetail', {
+                  data: this.state.item,
+                })
+              : Alert.alert(
+                  'Please Login',
+                  'You need to login to see this product',
+                  [
+                    {
+                      text: 'Cancel',
+                      onPress: () => console.log('Cancel Pressed'),
+                      style: 'cancel',
+                    },
+                    {
+                      text: 'OK',
+                      onPress: () => this.state.navigation.navigate('Signin'),
+                    },
+                  ],
+                  {cancelable: false},
+                );
+          }}>
           <View style={styles.container}>
             <View style={styles.box1}>
               <Image style={styles.image} source={{uri: this.state.img}} />
@@ -57,3 +76,6 @@ export default class Collection extends React.Component {
     }
   }
 }
+export default connect(state => ({
+  isLogged: state.authReducers,
+}))(Collection);

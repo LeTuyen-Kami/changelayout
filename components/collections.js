@@ -1,3 +1,4 @@
+/* eslint-disable eslint-comments/no-unlimited-disable */
 import React from 'react';
 import {View, ActivityIndicator, FlatList, StyleSheet} from 'react-native';
 import Collection from './collection';
@@ -28,7 +29,7 @@ function Collections(props) {
         .catch(error => console.error(error))
         .finally(() => setIsLoadMore(false));
     }
-  }, [isLoadMore]); // eslint-disable-line
+}, [isLoadMore]); // eslint-disable-line
 
   const styles = StyleSheet.create({
     container: {

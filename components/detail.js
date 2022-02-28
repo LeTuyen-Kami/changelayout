@@ -1,7 +1,8 @@
 import React from 'react';
 import {View, Text, Image, StyleSheet, ScrollView} from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
-
+import {connect} from 'react-redux';
+import Account from './account';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -62,7 +63,7 @@ const ShowRating = rate => {
 
 function BlogDetail(props) {
   const data = props.route.params.data;
-  return (
+  return props.isLogged.isLogin ? (
     <ScrollView style={styles.container}>
       <View style={styles.box1}>
         <View style={styles.img}>
@@ -92,8 +93,15 @@ function BlogDetail(props) {
       <View style={styles.box2}>
         <Text style={styles.Bold}>Description: </Text>
         <Text style={styles.height}>{data.description}</Text>
+        <Text style={styles.Bold} onPress={() => console.log(props.isLogged)}>
+          {props.isLogged.isLogin ? 'Buy' : 'Login to buy'}
+        </Text>
       </View>
     </ScrollView>
+  ) : (
+    <Account navigation={props.navigation} color="green" />
   );
 }
-export default BlogDetail;
+export default connect(state => ({
+  isLogged: state.authReducers,
+}))(BlogDetail);

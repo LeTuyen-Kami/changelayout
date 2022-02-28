@@ -12,6 +12,12 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Account from './components/account';
 import Signin from './components/signin';
 import Signup from './components/signup';
+import Logged from './components/logged';
+import {createStore, combineReducers} from 'redux';
+import authReducers from './app/Reducers/authReducers';
+import {Provider} from 'react-redux';
+
+const store = createStore(combineReducers({authReducers}));
 
 function Home({navigation}) {
   return (
@@ -21,7 +27,18 @@ function Home({navigation}) {
         justifyContent: 'center',
         alignItems: 'center',
       }}>
-      <Button title="goBlogList" onPress={() => navigation.navigate('List')} />
+      <Button
+        color={'#e91e63'}
+        title="goBlogList"
+        onPress={() => navigation.navigate('List')}
+      />
+      <Button
+        color={'#e91e63'}
+        title="setLogin"
+        onPress={() => {
+          console.log(store.getState().authReducers);
+        }}
+      />
     </View>
   );
 }
@@ -37,41 +54,60 @@ const Stack = createStackNavigator();
 
 function ProductStack() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: 'green',
+        },
+        headerTintColor: '#fff',
+      }}>
       <Stack.Screen name="ProductList" component={ProductList} />
       <Stack.Screen name="ProductDetail" component={ProductDetail} />
     </Stack.Navigator>
   );
 }
-
-function AccountStack() {
+function AccountStack(props) {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="Account" component={Account} />
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}>
+      <Stack.Screen name="Logged" component={Logged} />
+      <Stack.Screen
+        name="Account1"
+        component={Account}
+        initialParams={{color: '#2196F3'}}
+      />
       <Stack.Screen name="Signin" component={Signin} />
       <Stack.Screen name="Signup" component={Signup} />
     </Stack.Navigator>
   );
 }
 
-const Tab = createBottomTabNavigator();
+const bottomTab = createBottomTabNavigator();
 function BotomTab() {
   return (
-    <Tab.Navigator
+    <bottomTab.Navigator
       screenOptions={{
         tabBarActiveTintColor: '#e91e63',
         tabBarShowLabel: false,
       }}>
-      <Tab.Screen
+      <bottomTab.Screen
         name="Home"
         component={Home}
         options={{
           tabBarIcon: ({color, size}) => (
             <Icon name="home" size={size} color={color} />
           ),
+          tabBarInactiveBackgroundColor: '#e91e63',
+          headerStyle: {
+            backgroundColor: '#e91e63',
+          },
+          headerTintColor: '#fff',
+          tabBarInactiveTintColor: '#fff',
         }}
       />
-      <Tab.Screen
+      <bottomTab.Screen
         name="List"
         component={ProductStack}
         options={{
@@ -79,26 +115,34 @@ function BotomTab() {
           tabBarIcon: ({color, size}) => (
             <Icon name="list" color={color} size={size} />
           ),
+          tabBarInactiveBackgroundColor: 'green',
+          tabBarInactiveTintColor: '#fff',
         }}
       />
-      <Tab.Screen
-        name="AccountStack"
+      <bottomTab.Screen
+        name="Account"
         component={AccountStack}
         options={{
-          headerShown: false,
+          headerStyle: {
+            backgroundColor: '#2196F3',
+          },
+          headerTintColor: '#fff',
           tabBarIcon: ({color, size}) => (
             <Icon name="person" color={color} size={size} />
           ),
+          tabBarInactiveBackgroundColor: '#2196F3',
+          tabBarInactiveTintColor: '#fff',
         }}
       />
-    </Tab.Navigator>
+    </bottomTab.Navigator>
   );
 }
-
 export default function App() {
   return (
-    <NavigationContainer>
-      <BotomTab />
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <BotomTab />
+      </NavigationContainer>
+    </Provider>
   );
 }
