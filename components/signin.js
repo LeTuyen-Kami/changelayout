@@ -17,15 +17,21 @@ const Signin = props => (
     initialValues={{email: '', password: ''}}
     validationSchema={formValidation}
     onSubmit={values => {
-      if (readAccountDatabase) {
-        props.login();
-        props.navigation.reset({
-          index: 0,
-          routes: [{name: 'Logged'}],
+      readAccountDatabase(values)
+        .then(data => {
+          if (data) {
+            props.login();
+            props.navigation.reset({
+              index: 0,
+              routes: [{name: 'Logged'}],
+            });
+          } else {
+            Alert.alert('Wrong email or password');
+          }
+        })
+        .catch(err => {
+          console.log(err);
         });
-      } else {
-        Alert.alert('Wrong email or password');
-      }
     }}>
     {({handleChange, handleBlur, handleSubmit, values, errors}) => (
       <View>

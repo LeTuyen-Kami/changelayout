@@ -2,6 +2,19 @@
 import React from 'react';
 import {View, ActivityIndicator, FlatList, StyleSheet} from 'react-native';
 import Collection from './collection';
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  box1: {
+    flex: 1,
+  },
+  box2: {
+    flex: 7,
+  },
+});
+
 function Collections(props) {
   const [isLoading, setIsLoading] = React.useState(true);
   const [data, setData] = React.useState([]);
@@ -31,17 +44,7 @@ function Collections(props) {
     }
 }, [isLoadMore]); // eslint-disable-line
 
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-    },
-    box1: {
-      flex: 1,
-    },
-    box2: {
-      flex: 7,
-    },
-  });
+
   return (
     <View style={styles.container}>
       <View style={styles.box1}>

@@ -29,6 +29,7 @@
     "realm": "^10.13.0",
     "redux": "^4.1.2",
     "styled-components": "^5.3.3",
+    "uuid": "^8.3.2",
     "yup": "^0.28.5"
   },
   "devDependencies": {

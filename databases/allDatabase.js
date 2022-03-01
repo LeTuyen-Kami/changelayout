@@ -21,7 +21,7 @@ export const writeAccountDatabase = account => {
     .then(realm => {
       realm.write(() => {
         console.log(account);
-        let a = +account.Username;
+        let a = realm.objects('Account').length + 1;
         realm.create('Account', {
           id: a,
           name: account.Username,
@@ -39,22 +39,26 @@ export const readAccountDatabase = account => {
   return Realm.open(databaseOptions)
     .then(realm => {
       let accounts = realm.objects('Account');
-      return accounts.filtered(
-        `email = "${account.email}" AND password = "${account.password}"`,
-      );
+      return accounts.find(a => {
+        return a.email === account.email && a.password === account.password;
+      });
+      //return accounts;
     })
     .catch(error => {
       console.log(error);
     });
 };
 
-export const showAccountDatabase = () => {
-  return Realm.open(databaseOptions)
-    .then(realm => {
-      let accounts = realm.objects('Account');
-      return accounts;
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
+export const showAccountDatabase = () =>
+  new Promise((resolve, reject) => {
+    return Realm.open(databaseOptions)
+      .then(realm => realm.objects('Account'))
+      .then(accounts => {
+        accounts.forEach(account => {
+          console.log(account);
+        });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  });

@@ -16,6 +16,7 @@ import Logged from './components/logged';
 import {createStore, combineReducers} from 'redux';
 import authReducers from './app/Reducers/authReducers';
 import {Provider} from 'react-redux';
+import {showAccountDatabase} from './databases/allDatabase';
 
 const store = createStore(combineReducers({authReducers}));
 
@@ -36,7 +37,7 @@ function Home({navigation}) {
         color={'#e91e63'}
         title="setLogin"
         onPress={() => {
-          console.log(store.getState().authReducers);
+          showAccountDatabase();
         }}
       />
     </View>
