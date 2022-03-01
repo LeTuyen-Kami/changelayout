@@ -37,7 +37,7 @@ function Home({navigation}) {
         color={'#e91e63'}
         title="setLogin"
         onPress={() => {
-          showAccountDatabase();
+          console.log(store.getState().authReducers);
         }}
       />
     </View>

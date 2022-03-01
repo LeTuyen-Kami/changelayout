@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, Image, TouchableHighlight, Alert} from 'react-native';
+import {View, Text, Image, TouchableHighlight} from 'react-native';
 import styles from './styles';
 import {connect} from 'react-redux';
 
@@ -21,26 +21,9 @@ class Collection extends React.Component {
         <TouchableHighlight
           style={styles.button}
           onPress={() => {
-            this.props.isLogged.isLogin
-              ? this.state.navigation.navigate('ProductDetail', {
-                  data: this.state.item,
-                })
-              : Alert.alert(
-                  'Please Login',
-                  'You need to login to see this product',
-                  [
-                    {
-                      text: 'Cancel',
-                      onPress: () => console.log('Cancel Pressed'),
-                      style: 'cancel',
-                    },
-                    {
-                      text: 'OK',
-                      onPress: () => this.state.navigation.navigate('Signin'),
-                    },
-                  ],
-                  {cancelable: false},
-                );
+            this.state.navigation.navigate('ProductDetail', {
+              data: this.state.item,
+            });
           }}>
           <View style={styles.container}>
             <View style={styles.box1}>

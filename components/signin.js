@@ -20,7 +20,7 @@ const Signin = props => (
       readAccountDatabase(values)
         .then(data => {
           if (data) {
-            props.login();
+            props.login(values.email);
             props.navigation.reset({
               index: 0,
               routes: [{name: 'Logged'}],
@@ -80,6 +80,6 @@ export default connect(
     isLogged: state.authReducers,
   }),
   dispatch => ({
-    login: () => dispatch(login(true)),
+    login: name => dispatch(login(true, name)),
   }),
 )(Signin);

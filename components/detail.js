@@ -1,8 +1,9 @@
 import React from 'react';
-import {View, Text, Image, StyleSheet, ScrollView} from 'react-native';
+import {View, Text, Image, StyleSheet, ScrollView, Alert} from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {connect} from 'react-redux';
 import Account from './account';
+import {like} from '../app/Actions/authActions';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -15,6 +16,12 @@ const styles = StyleSheet.create({
   },
   box2: {
     paddingTop: 10,
+  },
+  box3: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    padding: 20,
   },
   img: {
     flex: 1,
@@ -63,45 +70,131 @@ const ShowRating = rate => {
 
 function BlogDetail(props) {
   const data = props.route.params.data;
-  return props.isLogged.isLogin ? (
-    <ScrollView style={styles.container}>
-      <View style={styles.box1}>
-        <View style={styles.img}>
-          <Image style={styles.image} source={{uri: data.image}} />
-        </View>
-        <View style={styles.info}>
-          <Text style={styles.height}>
-            <Text style={styles.Bold}>{data.title}</Text>
-          </Text>
-          <Text style={styles.height}>
-            <Text style={styles.Bold}>Price: </Text>
-            {data.price} USD
-          </Text>
-          <Text style={styles.height}>
-            <Text style={styles.Bold}>Rate: </Text>
-            {ShowRating(data.rating.rate)}
-          </Text>
-          <Text style={styles.height}>
-            <Text style={styles.Bold}>Rate Count: </Text>
-            {data.rating.count}
-          </Text>
-          <View style={styles.border}>
-            <Text style={styles.height}>{data.category}</Text>
+  const [name, setName] = React.useState('like2');
+  React.useEffect(() => {
+    const listLike = props.isLogged.liked;
+    listLike.find(item => {
+      return item.id === data.id && item.name === props.isLogged.username;
+    })
+      ? setName('like1')
+      : setName('like2');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  return (
+    <View style={{flex: 1}}>
+      <ScrollView style={styles.container}>
+        <View style={styles.box1}>
+          <View style={styles.img}>
+            <Image style={styles.image} source={{uri: data.image}} />
+          </View>
+          <View style={styles.info}>
+            <Text style={styles.height}>
+              <Text style={styles.Bold}>{data.title}</Text>
+            </Text>
+            <Text style={styles.height}>
+              <Text style={styles.Bold}>Price: </Text>
+              {data.price} USD
+            </Text>
+            <Text style={styles.height}>
+              <Text style={styles.Bold}>Rate: </Text>
+              {ShowRating(data.rating.rate)}
+            </Text>
+            <Text style={styles.height}>
+              <Text style={styles.Bold}>Rate Count: </Text>
+              {data.rating.count}
+            </Text>
+            <View style={styles.border}>
+              <Text style={styles.height}>{data.category}</Text>
+            </View>
           </View>
         </View>
+        <View style={styles.box2}>
+          <Text style={styles.Bold}>Description: </Text>
+          <Text style={styles.height}>{data.description}</Text>
+          <Text style={styles.Bold} onPress={() => console.log(props.isLogged)}>
+            {props.isLogged.isLogin ? 'Buy' : 'Login to buy'}
+          </Text>
+        </View>
+      </ScrollView>
+      <View style={styles.box3}>
+        <Icon
+          name={name}
+          size={45}
+          color="blue"
+          onPress={
+            () => {
+              if (name === 'like2') {
+                if (props.isLogged.isLogin) {
+                  props.addToCart({
+                    id: data.id,
+                    name: props.isLogged.username,
+                  });
+                  setName('like1');
+                  Alert.alert('Success', 'You liked this product');
+                } else {
+                  Alert.alert(
+                    'Please Login',
+                    'You nêd to login to like this product',
+                    [
+                      {
+                        text: 'Cancel',
+                        onPress: () => console.log('Cancel Pressed'),
+                        style: 'cancel',
+                      },
+                      {
+                        text: 'OK',
+                        onPress: () =>
+                          props.navigation.navigate('Account', {
+                            screen: 'Signin',
+                          }),
+                      },
+                    ],
+                    {cancelable: false},
+                  );
+                }
+              }
+            }
+            // name === 'like2'
+            //   ? props.isLogged.isLogin
+            //     ? setName('like1') &&
+            //       props.addToCart({
+            //         id: data.id,
+            //         name: props.isLogged.username,
+            //       }) &&
+            //       Alert.alert('Success', 'Added to cart')
+            //     : Alert.alert(
+            //         'Please Login',
+            //         'You need to login to see this product',
+            //         [
+            //           {
+            //             text: 'Cancel',
+            //             onPress: () => console.log('Cancel Pressed'),
+            //             style: 'cancel',
+            //           },
+            //           {
+            //             text: 'OK',
+            //             onPress: () =>
+            //               props.navigation.navigate('Account', {
+            //                 screen: 'Signin',
+            //               }),
+            //           },
+            //         ],
+            //       )
+            //   : null
+          }
+        />
       </View>
-      <View style={styles.box2}>
-        <Text style={styles.Bold}>Description: </Text>
-        <Text style={styles.height}>{data.description}</Text>
-        <Text style={styles.Bold} onPress={() => console.log(props.isLogged)}>
-          {props.isLogged.isLogin ? 'Buy' : 'Login to buy'}
-        </Text>
-      </View>
-    </ScrollView>
-  ) : (
-    <Account navigation={props.navigation} color="green" />
+    </View>
   );
+  // : (
+  //   <Account navigation={props.navigation} color="green" />
+  // );
 }
-export default connect(state => ({
-  isLogged: state.authReducers,
-}))(BlogDetail);
+export default connect(
+  state => ({
+    isLogged: state.authReducers,
+  }),
+  dispatch => ({
+    addToCart: data => dispatch(like(data)),
+  }),
+)(BlogDetail);
