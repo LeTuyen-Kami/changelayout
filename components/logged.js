@@ -2,7 +2,6 @@ import React from 'react';
 import {View, StyleSheet, Image, Text, Button} from 'react-native';
 import {connect} from 'react-redux';
 import {login} from '../app/Actions/authActions';
-import Account from './account';
 
 const styles = StyleSheet.create({
   container: {
@@ -20,7 +19,7 @@ const styles = StyleSheet.create({
 });
 
 function Logged(props) {
-  return props.isLogged.isLogin ? (
+  return (
     <View>
       <View style={styles.container}>
         <Image
@@ -41,8 +40,6 @@ function Logged(props) {
         }}
       />
     </View>
-  ) : (
-    <Account navigation={props.navigation} />
   );
 }
 export default connect(

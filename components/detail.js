@@ -2,7 +2,6 @@ import React from 'react';
 import {View, Text, Image, StyleSheet, ScrollView, Alert} from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {connect} from 'react-redux';
-import Account from './account';
 import {like} from '../app/Actions/authActions';
 const styles = StyleSheet.create({
   container: {
@@ -81,6 +80,7 @@ function BlogDetail(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
+    // eslint-disable-next-line react-native/no-inline-styles
     <View style={{flex: 1}}>
       <ScrollView style={styles.container}>
         <View style={styles.box1}>
@@ -144,8 +144,8 @@ function BlogDetail(props) {
                       {
                         text: 'OK',
                         onPress: () =>
-                          props.navigation.navigate('Account', {
-                            screen: 'Signin',
+                          props.navigation.navigate('Signin', {
+                            color: 'green',
                           }),
                       },
                     ],

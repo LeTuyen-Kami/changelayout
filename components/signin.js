@@ -5,7 +5,7 @@ import * as yup from 'yup';
 import {login} from '../app/Actions/authActions';
 import {connect} from 'react-redux';
 import {readAccountDatabase} from '../databases/allDatabase';
-
+import Logged from './logged';
 const font_size = 17;
 const formValidation = yup.object().shape({
   email: yup.string().email().required(),
@@ -13,6 +13,7 @@ const formValidation = yup.object().shape({
 });
 
 const Signin = props => (
+  // !props.isLogged.isLogin ?
   <Formik
     initialValues={{email: '', password: ''}}
     validationSchema={formValidation}
@@ -20,11 +21,12 @@ const Signin = props => (
       readAccountDatabase(values)
         .then(data => {
           if (data) {
+            props.navigation.goBack();
             props.login(values.email);
-            props.navigation.reset({
-              index: 0,
-              routes: [{name: 'Logged'}],
-            });
+            // reset({
+            //   index: 0,
+            //   routes: [{name: 'Logged'}],
+            // });
           } else {
             Alert.alert('Wrong email or password');
           }
@@ -51,7 +53,11 @@ const Signin = props => (
           placeholder="Password"
           style={{fontSize: font_size}}
         />
-        <Button onPress={handleSubmit} title="Signin" />
+        <Button
+          color={props.route.params.color}
+          onPress={handleSubmit}
+          title="Signin"
+        />
         <View
           // eslint-disable-next-line react-native/no-inline-styles
           style={{
@@ -75,6 +81,9 @@ const Signin = props => (
     )}
   </Formik>
 );
+// : (
+//   <Logged navigation={props.navigation} />
+// );
 export default connect(
   state => ({
     isLogged: state.authReducers,

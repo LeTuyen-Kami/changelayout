@@ -16,7 +16,7 @@ import Logged from './components/logged';
 import {createStore, combineReducers} from 'redux';
 import authReducers from './app/Reducers/authReducers';
 import {Provider} from 'react-redux';
-import {showAccountDatabase} from './databases/allDatabase';
+// import {showAccountDatabase} from './databases/allDatabase';
 
 const store = createStore(combineReducers({authReducers}));
 
@@ -37,7 +37,9 @@ function Home({navigation}) {
         color={'#e91e63'}
         title="setLogin"
         onPress={() => {
-          console.log(store.getState().authReducers);
+          navigation.navigate('Account', {
+            screen: 'Signin',
+          });
         }}
       />
     </View>
@@ -64,6 +66,8 @@ function ProductStack() {
       }}>
       <Stack.Screen name="ProductList" component={ProductList} />
       <Stack.Screen name="ProductDetail" component={ProductDetail} />
+      <Stack.Screen name="Signin" component={Signin} />
+      <Stack.Screen name="Signup" component={Signup} />
     </Stack.Navigator>
   );
 }
@@ -73,12 +77,12 @@ function AccountStack(props) {
       screenOptions={{
         headerShown: false,
       }}>
-      <Stack.Screen name="Logged" component={Logged} />
       <Stack.Screen
         name="Account1"
         component={Account}
         initialParams={{color: '#2196F3'}}
       />
+      <Stack.Screen name="Logged" component={Logged} />
       <Stack.Screen name="Signin" component={Signin} />
       <Stack.Screen name="Signup" component={Signup} />
     </Stack.Navigator>
