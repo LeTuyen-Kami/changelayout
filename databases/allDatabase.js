@@ -16,23 +16,34 @@ const databaseOptions = {
   schemaVersion: 0,
 };
 
+function checkHaveEmail(email) {
+  const realm = new Realm(databaseOptions);
+  const data = realm.objects('Account');
+
+  return data.find(item => item.email === email);
+}
+
 export const writeAccountDatabase = account => {
-  Realm.open(databaseOptions)
-    .then(realm => {
-      realm.write(() => {
-        console.log(account);
-        let a = realm.objects('Account').length + 1;
-        realm.create('Account', {
-          id: a,
-          name: account.Username,
-          email: account.email,
-          password: account.password,
+  if (checkHaveEmail(account.email)) {
+    return false;
+  } else {
+    Realm.open(databaseOptions)
+      .then(realm => {
+        realm.write(() => {
+          let a = realm.objects('Account').length + 2;
+          realm.create('Account', {
+            id: a,
+            name: account.Username,
+            email: account.email,
+            password: account.password,
+          });
         });
+      })
+      .catch(error => {
+        console.log(error);
       });
-    })
-    .catch(error => {
-      console.log(error);
-    });
+    return true;
+  }
 };
 
 export const readAccountDatabase = account => {

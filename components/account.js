@@ -12,7 +12,7 @@ function Account(props) {
       </Text>
       <TouchableOpacity
         onPress={() =>
-          props.navigation.navigate('Signin', {
+          props.navigation.navigate('SigninAndup', {
             color: '#2196F3',
           })
         }

@@ -1,6 +1,7 @@
 const initialState = {
   isLogin: false,
   username: '',
+  typeLogin: '',
   liked: [
     {
       id: null,
@@ -16,6 +17,7 @@ export default function authReducers(state = initialState, action) {
         ...state,
         isLogin: action.payload,
         username: action.name,
+        typeLogin: action.typeLogin,
       };
     case 'LOGOUT':
       return {

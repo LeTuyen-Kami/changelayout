@@ -1,8 +1,9 @@
-export function login(isLogin, name) {
+export function login(isLogin, name, typeLogin) {
   return {
     type: 'LOGIN',
     payload: isLogin,
     name: name,
+    typeLogin: typeLogin,
   };
 }
 export function logout(isLogin) {

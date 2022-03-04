@@ -2,7 +2,7 @@ import React from 'react';
 import {View, StyleSheet, Image, Text, Button} from 'react-native';
 import {connect} from 'react-redux';
 import {login} from '../app/Actions/authActions';
-
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
@@ -19,6 +19,14 @@ const styles = StyleSheet.create({
 });
 
 function Logged(props) {
+  const signOut = async () => {
+    try {
+      await GoogleSignin.revokeAccess();
+      await GoogleSignin.signOut();
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <View>
       <View style={styles.container}>
@@ -33,6 +41,9 @@ function Logged(props) {
         title="Logout"
         onPress={() => {
           props.logout();
+          if (props.isLogged.typeLogin === 'GOOGLE') {
+            signOut();
+          }
           props.navigation.reset({
             index: 0,
             routes: [{name: 'Account1'}],

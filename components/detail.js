@@ -121,67 +121,38 @@ function BlogDetail(props) {
           name={name}
           size={45}
           color="blue"
-          onPress={
-            () => {
-              if (name === 'like2') {
-                if (props.isLogged.isLogin) {
-                  props.addToCart({
-                    id: data.id,
-                    name: props.isLogged.username,
-                  });
-                  setName('like1');
-                  Alert.alert('Success', 'You liked this product');
-                } else {
-                  Alert.alert(
-                    'Please Login',
-                    'You nêd to login to like this product',
-                    [
-                      {
-                        text: 'Cancel',
-                        onPress: () => console.log('Cancel Pressed'),
-                        style: 'cancel',
-                      },
-                      {
-                        text: 'OK',
-                        onPress: () =>
-                          props.navigation.navigate('Signin', {
-                            color: 'green',
-                          }),
-                      },
-                    ],
-                    {cancelable: false},
-                  );
-                }
+          onPress={() => {
+            if (name === 'like2') {
+              if (props.isLogged.isLogin) {
+                props.addToCart({
+                  id: data.id,
+                  name: props.isLogged.username,
+                });
+                setName('like1');
+                Alert.alert('Success', 'You liked this product');
+              } else {
+                Alert.alert(
+                  'Please Login',
+                  'You nêd to login to like this product',
+                  [
+                    {
+                      text: 'Cancel',
+                      onPress: () => console.log('Cancel Pressed'),
+                      style: 'cancel',
+                    },
+                    {
+                      text: 'OK',
+                      onPress: () =>
+                        props.navigation.navigate('SigninAndup', {
+                          color: 'green',
+                        }),
+                    },
+                  ],
+                  {cancelable: false},
+                );
               }
             }
-            // name === 'like2'
-            //   ? props.isLogged.isLogin
-            //     ? setName('like1') &&
-            //       props.addToCart({
-            //         id: data.id,
-            //         name: props.isLogged.username,
-            //       }) &&
-            //       Alert.alert('Success', 'Added to cart')
-            //     : Alert.alert(
-            //         'Please Login',
-            //         'You need to login to see this product',
-            //         [
-            //           {
-            //             text: 'Cancel',
-            //             onPress: () => console.log('Cancel Pressed'),
-            //             style: 'cancel',
-            //           },
-            //           {
-            //             text: 'OK',
-            //             onPress: () =>
-            //               props.navigation.navigate('Account', {
-            //                 screen: 'Signin',
-            //               }),
-            //           },
-            //         ],
-            //       )
-            //   : null
-          }
+          }}
         />
       </View>
     </View>

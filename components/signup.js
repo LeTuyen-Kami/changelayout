@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, TextInput, View, Text} from 'react-native';
+import {Button, TextInput, View, Text, Alert} from 'react-native';
 import {Formik} from 'formik';
 import {connect} from 'react-redux';
 import {writeAccountDatabase} from '../databases/allDatabase';
@@ -22,10 +22,14 @@ const Signup = props => (
     initialValues={{email: '', password: '', Username: '', confirmPassword: ''}}
     validationSchema={formValidation}
     onSubmit={values => {
-      let a = +values.Username;
-      console.log(a);
-      writeAccountDatabase(values);
-      props.navigation.navigate('Signin');
+      if (writeAccountDatabase(values)) {
+        props.navigation.replace('Signin', {
+          color: props.route.params.color,
+        });
+      } else {
+        console.log(writeAccountDatabase(values));
+        Alert.alert('Email already exists');
+      }
     }}>
     {({handleChange, handleBlur, handleSubmit, values, errors}) => (
       <View>
@@ -58,7 +62,8 @@ const Signup = props => (
           placeholder="Confirm Password"
         />
         <Button onPress={handleSubmit} title="Signup" />
-        <View
+
+        {/* <View
           // eslint-disable-next-line react-native/no-inline-styles
           style={{
             flexDirection: 'row',
@@ -73,10 +78,14 @@ const Signup = props => (
               textDecorationLine: 'underline',
               fontSize: font_size,
             }}
-            onPress={() => props.navigation.navigate('Signin')}>
+            onPress={() =>
+              props.navigation.navigate('Signin', {
+                color: props.route.params.color,
+              })
+            }>
             Signin
           </Text>
-        </View>
+        </View> */}
       </View>
     )}
   </Formik>

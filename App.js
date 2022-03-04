@@ -1,7 +1,10 @@
 /* eslint-disable react-native/no-inline-styles */
 
 import {createStackNavigator} from '@react-navigation/stack';
-import {NavigationContainer} from '@react-navigation/native';
+import {
+  NavigationContainer,
+  getFocusedRouteNameFromRoute,
+} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import * as React from 'react';
 import {View, Button} from 'react-native';
@@ -16,8 +19,8 @@ import Logged from './components/logged';
 import {createStore, combineReducers} from 'redux';
 import authReducers from './app/Reducers/authReducers';
 import {Provider} from 'react-redux';
-// import {showAccountDatabase} from './databases/allDatabase';
-
+import SigninAndSignup from './components/SigninAndup';
+import {showAccountDatabase} from './databases/allDatabase';
 const store = createStore(combineReducers({authReducers}));
 
 function Home({navigation}) {
@@ -37,9 +40,7 @@ function Home({navigation}) {
         color={'#e91e63'}
         title="setLogin"
         onPress={() => {
-          navigation.navigate('Account', {
-            screen: 'Signin',
-          });
+          showAccountDatabase();
         }}
       />
     </View>
@@ -55,7 +56,24 @@ function ProductDetail(props) {
 
 const Stack = createStackNavigator();
 
-function ProductStack() {
+function ProductStack(props) {
+  React.useLayoutEffect(() => {
+    const routeName = getFocusedRouteNameFromRoute(props.route);
+    if (
+      routeName === 'Signin' ||
+      routeName === 'Signup' ||
+      routeName === 'SigninAndup'
+    ) {
+      props.navigation.setOptions({
+        tabBarStyle: {display: 'none'},
+      });
+    } else {
+      props.navigation.setOptions({
+        tabBarStyle: {display: 'flex'},
+      });
+    }
+  }, [props.navigation, props.route]);
+
   return (
     <Stack.Navigator
       screenOptions={{
@@ -68,14 +86,40 @@ function ProductStack() {
       <Stack.Screen name="ProductDetail" component={ProductDetail} />
       <Stack.Screen name="Signin" component={Signin} />
       <Stack.Screen name="Signup" component={Signup} />
+      <Stack.Screen
+        options={{
+          headerShown: false,
+        }}
+        name="SigninAndup"
+        component={SigninAndSignup}
+      />
     </Stack.Navigator>
   );
 }
 function AccountStack(props) {
+  React.useLayoutEffect(() => {
+    const routeName = getFocusedRouteNameFromRoute(props.route);
+    if (
+      routeName === 'Signin' ||
+      routeName === 'Signup' ||
+      routeName === 'SigninAndup'
+    ) {
+      props.navigation.setOptions({
+        tabBarStyle: {display: 'none'},
+      });
+    } else {
+      props.navigation.setOptions({
+        tabBarStyle: {display: 'flex'},
+      });
+    }
+  }, [props.navigation, props.route]);
   return (
     <Stack.Navigator
       screenOptions={{
-        headerShown: false,
+        headerStyle: {
+          backgroundColor: '#2196F3',
+        },
+        headerTintColor: '#fff',
       }}>
       <Stack.Screen
         name="Account1"
@@ -85,6 +129,13 @@ function AccountStack(props) {
       <Stack.Screen name="Logged" component={Logged} />
       <Stack.Screen name="Signin" component={Signin} />
       <Stack.Screen name="Signup" component={Signup} />
+      <Stack.Screen
+        options={{
+          headerShown: false,
+        }}
+        name="SigninAndup"
+        component={SigninAndSignup}
+      />
     </Stack.Navigator>
   );
 }
@@ -128,6 +179,8 @@ function BotomTab() {
         name="Account"
         component={AccountStack}
         options={{
+          headerShown: false,
+
           headerStyle: {
             backgroundColor: '#2196F3',
           },

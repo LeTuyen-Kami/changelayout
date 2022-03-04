@@ -5,7 +5,8 @@ import * as yup from 'yup';
 import {login} from '../app/Actions/authActions';
 import {connect} from 'react-redux';
 import {readAccountDatabase} from '../databases/allDatabase';
-import Logged from './logged';
+import Icon from 'react-native-vector-icons/AntDesign';
+
 const font_size = 17;
 const formValidation = yup.object().shape({
   email: yup.string().email().required(),
@@ -14,72 +15,78 @@ const formValidation = yup.object().shape({
 
 const Signin = props => (
   // !props.isLogged.isLogin ?
-  <Formik
-    initialValues={{email: '', password: ''}}
-    validationSchema={formValidation}
-    onSubmit={values => {
-      readAccountDatabase(values)
-        .then(data => {
-          if (data) {
-            props.navigation.goBack();
-            props.login(values.email);
-            // reset({
-            //   index: 0,
-            //   routes: [{name: 'Logged'}],
-            // });
-          } else {
-            Alert.alert('Wrong email or password');
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    }}>
-    {({handleChange, handleBlur, handleSubmit, values, errors}) => (
-      <View>
-        {errors.email && <Text>{errors.email}</Text>}
-        <TextInput
-          onChangeText={handleChange('email')}
-          onBlur={handleBlur('email')}
-          value={values.email}
-          placeholder="Email"
-          style={{fontSize: font_size}}
-        />
-        {errors.password && <Text>{errors.password}</Text>}
-        <TextInput
-          onChangeText={handleChange('password')}
-          onBlur={handleBlur('password')}
-          value={values.password}
-          placeholder="Password"
-          style={{fontSize: font_size}}
-        />
-        <Button
-          color={props.route.params.color}
-          onPress={handleSubmit}
-          title="Signin"
-        />
-        <View
-          // eslint-disable-next-line react-native/no-inline-styles
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            fontSize: font_size,
-          }}>
-          <Text style={{fontSize: font_size}}>Don't have an account?</Text>
-          <Text
+  <View style={{flex: 1, justifyContent: 'center'}}>
+    <Formik
+      initialValues={{email: '', password: ''}}
+      validationSchema={formValidation}
+      onSubmit={values => {
+        readAccountDatabase(values)
+          .then(data => {
+            if (data) {
+              props.navigation.pop(2);
+              props.login(values.email, 'NORMAL');
+              // reset({
+              //   index: 0,
+              //   routes: [{name: 'Logged'}],
+              // });
+            } else {
+              Alert.alert('Wrong email or password');
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }}>
+      {({handleChange, handleBlur, handleSubmit, values, errors}) => (
+        <View>
+          {errors.email && <Text>{errors.email}</Text>}
+          <TextInput
+            onChangeText={handleChange('email')}
+            onBlur={handleBlur('email')}
+            value={values.email}
+            placeholder="Email"
+            style={{fontSize: font_size}}
+          />
+          {errors.password && <Text>{errors.password}</Text>}
+          <TextInput
+            onChangeText={handleChange('password')}
+            onBlur={handleBlur('password')}
+            value={values.password}
+            placeholder="Password"
+            style={{fontSize: font_size}}
+          />
+          <Button
+            color={props.route.params.color}
+            onPress={handleSubmit}
+            title="Signin"
+          />
+          {/* <View
             // eslint-disable-next-line react-native/no-inline-styles
             style={{
-              color: 'blue',
-              textDecorationLine: 'underline',
+              flexDirection: 'row',
+              justifyContent: 'center',
               fontSize: font_size,
-            }}
-            onPress={() => props.navigation.navigate('Signup')}>
-            Signup
-          </Text>
+            }}>
+            <Text style={{fontSize: font_size}}>Don't have an account?</Text>
+            <Text
+              // eslint-disable-next-line react-native/no-inline-styles
+              style={{
+                color: 'blue',
+                textDecorationLine: 'underline',
+                fontSize: font_size,
+              }}
+              onPress={() =>
+                props.navigation.navigate('Signup', {
+                  color: props.route.params.color,
+                })
+              }>
+              Signup
+            </Text>
+          </View> */}
         </View>
-      </View>
-    )}
-  </Formik>
+      )}
+    </Formik>
+  </View>
 );
 // : (
 //   <Logged navigation={props.navigation} />
@@ -89,6 +96,6 @@ export default connect(
     isLogged: state.authReducers,
   }),
   dispatch => ({
-    login: name => dispatch(login(true, name)),
+    login: (name, typeLogin) => dispatch(login(true, name, typeLogin)),
   }),
 )(Signin);
